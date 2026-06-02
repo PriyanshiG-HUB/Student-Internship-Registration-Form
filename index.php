@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <style>
     body{
     display: flex;
@@ -54,28 +55,28 @@ button{
             <h2>Student Internship Application</h2>
             <div id="personal-info">
                 <label for="First_Name">First Name:</label>
-                <input type="text" id="First_Name" name="First_Name" required>
+                <input type="text" id="First_Name" name="First_Name" >
 
                 <label for="Last_Name">Last Name:</label>
-                <input type="text" id="Last_Name" name="Last_Name" required>
+                <input type="text" id="Last_Name" name="Last_Name" >
             </div>
 
             <div id="contact-info">
                 <label for="date">Date of Birth:</label>
-                <input type="date" id="date" name="date" required>
+                <input type="date" id="date" name="date" >
             </div>
                 
             <div id="contact-info">
                 <label for="phno">Mobile Number:</label>
-                <input type="text" id="phno" name="phno" required pattern="[0-9]{10}" placeholder="Enter 10-digit mobile number">
+                <input type="text" id="phno" name="phno"  pattern="[0-9]{10}" placeholder="Enter 10-digit mobile number">
             </div>
             <div>
                 <label for="email">Email Address :</label>
-                <input type="email" id="email" name="email" required placeholder="Enter your email address">
+                <input type="email" id="email" name="email"  placeholder="Enter your email address">
             </div>
             <div>
                 <label for="paswd">Password :</label>
-                <input type="password" id="paswd" name="paswd" required>
+                <input type="password" id="paswd" name="paswd" >
             </div>
             <div>
                 <label for="gender">Gender:</label>
@@ -107,11 +108,15 @@ button{
                 <input type="file" id="resume" name="resume">
             </div>
                 <div>
-                    <button type="submit" name="submit">Submit</button>   
-                    <button type="reset">Reset</button>
-                </div>
+    <p id="message"></p>
+
+    <button type="submit" name="submit">Submit</button>   
+    <button type="reset">Reset</button>
+</div>
 
         </form>
     </div>
+    <script src="script.js"></script>
 </body>
+
 </html>

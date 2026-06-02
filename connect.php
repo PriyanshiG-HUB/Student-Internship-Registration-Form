@@ -13,7 +13,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Form Submit
+// Run only when form is submitted
 if (isset($_POST['submit'])) {
 
     $fname = $_POST['First_Name'];
@@ -25,11 +25,15 @@ if (isset($_POST['submit'])) {
     // Password Hashing
     $password = password_hash($_POST['paswd'], PASSWORD_DEFAULT);
 
-    $gender = $_POST['gender'];
+    // Gender
+    $gender = isset($_POST['gender']) ? $_POST['gender'] : "";
 
     // Department
-    $department = implode(", ", $_POST['Dept']);
+    $department = isset($_POST['Dept'])
+        ? implode(", ", $_POST['Dept'])
+        : "";
 
+    // Position
     $position = $_POST['PA'];
 
     // File Upload
@@ -41,7 +45,9 @@ if (isset($_POST['submit'])) {
     move_uploaded_file($tempname, $folder);
 
     // Insert Query
-    $sql = "INSERT INTO `internship_db` (`First Name`, `Last Name`, `Date of Birth`, `Mobile Number`, `Email Address`, `Password`, `Gender`, `Department`, `Position Available`, `Resume`) VALUES ('$fname', '$lname', '$dob', '$mobile', '$email', '$password', '$gender', '$department', '$position', '$resume')";
+    $sql = "INSERT INTO internship_db
+(first_name, last_name, dob, mobile, email, password, gender, department, position, resume) VALUES ('$fname', '$lname', '$dob', '$mobile', '$email', '$password', '$gender', '$department', '$position', '$resume')";
+    
 
     // Execute Query
     if ($conn->query($sql) === TRUE) {
