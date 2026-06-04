@@ -12,7 +12,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    min-height: 100px;
+    max-height: 900px;
     background-color: #f5f5f5;
 }
 
@@ -60,6 +61,14 @@ button{
                 <label for="Last_Name">Last Name:</label>
                 <input type="text" id="Last_Name" name="Last_Name" >
             </div>
+            <div>
+                <label for="s_id">Student ID:</label>
+                <input type="text" id="s_id" name="s_id" >
+            </div>
+            <div>
+    <label for="cgpa">CGPA:</label>
+    <input type="text" id="cgpa" name="cgpa" placeholder="Enter your CGPA">
+</div>
 
             <div id="contact-info">
                 <label for="date">Date of Birth:</label>

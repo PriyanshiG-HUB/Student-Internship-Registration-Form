@@ -8,6 +8,8 @@ document.querySelector("form").addEventListener("submit", function(e) {
     let fname = document.getElementById("First_Name").value.trim();
     let lname = document.getElementById("Last_Name").value.trim();
     let dob = document.getElementById("date").value;
+    let s_id = document.getElementById("s_id").value.trim();
+    let cgpa = document.getElementById("cgpa").value.trim();
     let mobile = document.getElementById("phno").value.trim();
     let email = document.getElementById("email").value.trim();
     let password = document.getElementById("paswd").value.trim();
@@ -30,6 +32,17 @@ document.querySelector("form").addEventListener("submit", function(e) {
         return;
     }
 
+    if (s_id === "") {
+        message.innerHTML = "Student ID is required";
+        e.preventDefault();
+        return;
+    }   
+
+    if (cgpa === "") {
+        message.innerHTML = "CGPA is required";
+        e.preventDefault();
+        return;
+    }
     if (dob === "") {
         message.innerHTML = "Please select Date of Birth";
         e.preventDefault();
