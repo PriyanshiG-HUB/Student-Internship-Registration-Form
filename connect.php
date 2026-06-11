@@ -1,93 +1,198 @@
 <?php
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "internshipregisteration";
+$servername="localhost";
+$username="root";
+$password="";
+$dbname="internshipregisteration";
 
-// Create Connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn=new mysqli(
+$servername,
+$username,
+$password,
+$dbname
+);
 
-// Check Connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+if($conn->connect_error){
+    die("Connection Failed : "
+    .$conn->connect_error);
 }
 
-// Run only when form is submitted
-if (isset($_POST['submit'])) {
+if(isset($_POST['submit'])){
 
-    $fname = $_POST['First_Name'];
-    $lname = $_POST['Last_Name'];
-    $s_id = $_POST['s_id'];
-    $cgpa = $_POST['cgpa'];
-    $dob = $_POST['date'];
-    $mobile = $_POST['phno'];
-    $email = $_POST['email'];
+    $fname=$_POST['First_Name'];
+    $lname=$_POST['Last_Name'];
+    $s_id=$_POST['s_id'];
+    $cgpa=$_POST['cgpa'];
+    $dob=$_POST['date'];
+    $mobile=$_POST['phno'];
+    $email=$_POST['email'];
 
-    // Password Hashing
-    $password = password_hash($_POST['paswd'], PASSWORD_DEFAULT);
+    $passwordHash=
+    password_hash(
+    $_POST['paswd'],
+    PASSWORD_DEFAULT
+    );
 
-    // Gender
-    $gender = isset($_POST['gender']) ? $_POST['gender'] : "";
+    $gender=
+    $_POST['gender'] ?? "";
 
-    // Department
-    $department = isset($_POST['Dept'])
-        ? implode(", ", $_POST['Dept'])
-        : "";
+    $department=
+    isset($_POST['Dept'])
+    ? implode(", ",$_POST['Dept'])
+    : "";
 
-    // Position
-    $position = $_POST['PA'];
+    $position=$_POST['PA'];
 
-    // File Upload
-    $resume = $_FILES['resume']['name'];
-    $tempname = $_FILES['resume']['tmp_name'];
+    /*
+    =====================
+    DUPLICATE EMAIL CHECK
+    =====================
+    */
 
-    $folder = "uploads/" . $resume;
+    $check=$conn->prepare(
+    "SELECT email
+     FROM internship_db
+     WHERE email=?"
+    );
 
-    move_uploaded_file($tempname, $folder);
+    $check->bind_param(
+    "s",
+    $email
+    );
 
-    // Insert Query
-    $sql = "INSERT INTO internship_db
-(first_name, last_name, s_id, dob, mobile, email,password, gender, department, position,cgpa, resume) VALUES ('$fname', '$lname', '$s_id', '$dob','$mobile', '$email', '$password','$gender', '$department', '$position','$cgpa', '$resume')";
+    $check->execute();
 
-    // Execute Query
-    if ($conn->query($sql) === TRUE) {
+    $result=
+    $check->get_result();
 
-    // Get newly inserted student id
-    $student_id = $conn->insert_id;
+    if($result->num_rows>0){
 
-    // Find matching internship based on selected position
-    $getInternship = "
-    SELECT i_id
-    FROM internship
-    WHERE i_role = '$position'
-    LIMIT 1
-    ";
+        echo "<script>
+        alert('Email already exists');
+        </script>";
 
-    $result = $conn->query($getInternship);
-
-    if($result->num_rows > 0){
-
-        $row = $result->fetch_assoc();
-
-        $internship_id = $row['i_id'];
-
-        // Insert into application table
-        // $app_sql = "
-        // INSERT INTO application
-        // (student_id, internship_id, application_status)
-        // VALUES
-        // ($student_id, $internship_id, 'Applied')
-        // ";
-
-        // $conn->query($app_sql);
+        exit;
     }
 
-    echo "<script>alert('Application Submitted Successfully');</script>";
+    /*
+    =====================
+    FILE UPLOAD
+    =====================
+    */
 
-} else {
-    echo "Error: " . $conn->error;
-}
-}
+    if(!file_exists("uploads")){
+        mkdir(
+        "uploads",
+        0777,
+        true
+        );
+    }
 
+    $resume=
+    $_FILES['resume']['name'];
+
+    $tempname=
+    $_FILES['resume']['tmp_name'];
+
+    $extension=
+    strtolower(
+    pathinfo(
+    $resume,
+    PATHINFO_EXTENSION
+    )
+    );
+
+    $allowed=
+    ['pdf','doc','docx'];
+
+    if(
+    !in_array(
+    $extension,
+    $allowed
+    )
+    ){
+        die(
+        "Only PDF DOC DOCX allowed"
+        );
+    }
+
+    $folder=
+    "uploads/".
+    time().
+    "_".
+    $resume;
+
+    move_uploaded_file(
+    $tempname,
+    $folder
+    );
+
+    /*
+    =====================
+    INSERT DATA
+    =====================
+    */
+
+    $stmt=
+    $conn->prepare(
+
+    "INSERT INTO internship_db
+    (
+    first_name,
+    last_name,
+    s_id,
+    dob,
+    mobile,
+    email,
+    password,
+    gender,
+    department,
+    position,
+    cgpa,
+    resume
+    )
+
+    VALUES
+
+    (
+    ?,?,?,?,?,?,?,?,?,?,?,?
+    )"
+
+    );
+
+    $stmt->bind_param(
+
+    "ssssssssssss",
+
+    $fname,
+    $lname,
+    $s_id,
+    $dob,
+    $mobile,
+    $email,
+    $passwordHash,
+    $gender,
+    $department,
+    $position,
+    $cgpa,
+    $folder
+
+    );
+
+    if($stmt->execute()){
+
+        echo "<script>
+            alert('Registration Successful');
+            window.location='login.php';
+        </script>";
+
+    }
+    else{
+
+        echo "Error : "
+        .$stmt->error;
+
+    }
+
+}
 ?>

@@ -1,93 +1,199 @@
-document.querySelector("form").addEventListener("submit", function(e) {
+document
+.querySelector("form")
+.addEventListener(
+"submit",
+function(e){
 
-    let message = document.getElementById("message");
+let message=
+document.getElementById(
+"message"
+);
 
-    message.innerHTML = "";
-    message.style.color = "red";
+message.innerHTML="";
+message.style.color="red";
 
-    let fname = document.getElementById("First_Name").value.trim();
-    let lname = document.getElementById("Last_Name").value.trim();
-    let dob = document.getElementById("date").value;
-    let s_id = document.getElementById("s_id").value.trim();
-    let cgpa = document.getElementById("cgpa").value.trim();
-    let mobile = document.getElementById("phno").value.trim();
-    let email = document.getElementById("email").value.trim();
-    let password = document.getElementById("paswd").value.trim();
+let fname=
+document
+.getElementById(
+"First_Name"
+)
+.value.trim();
 
-    let gender = document.querySelector('input[name="gender"]:checked');
+let lname=
+document
+.getElementById(
+"Last_Name"
+)
+.value.trim();
 
-    let dept = document.querySelectorAll('input[name="Dept[]"]:checked');
+let sid=
+document
+.getElementById(
+"s_id"
+)
+.value.trim();
 
-    let resume = document.getElementById("resume").files.length;
+let cgpa=
+document
+.getElementById(
+"cgpa"
+)
+.value.trim();
 
-    if (fname === "") {
-        message.innerHTML = "First Name is required";
-        e.preventDefault();
-        return;
-    }
+let dob=
+document
+.getElementById(
+"date"
+)
+.value;
 
-    if (lname === "") {
-        message.innerHTML = "Last Name is required";
-        e.preventDefault();
-        return;
-    }
+let mobile=
+document
+.getElementById(
+"phno"
+)
+.value.trim();
 
-    if (s_id === "") {
-        message.innerHTML = "Student ID is required";
-        e.preventDefault();
-        return;
-    }   
+let email=
+document
+.getElementById(
+"email"
+)
+.value.trim();
 
-    if (cgpa === "") {
-        message.innerHTML = "CGPA is required";
-        e.preventDefault();
-        return;
-    }
-    if (dob === "") {
-        message.innerHTML = "Please select Date of Birth";
-        e.preventDefault();
-        return;
-    }
+let password=
+document
+.getElementById(
+"paswd"
+)
+.value.trim();
 
-    let mobilePattern = /^[0-9]{10}$/;
+let gender=
+document.querySelector(
+'input[name="gender"]:checked'
+);
 
-    if (!mobilePattern.test(mobile)) {
-        message.innerHTML = "Enter valid 10-digit mobile number";
-        e.preventDefault();
-        return;
-    }
+let dept=
+document.querySelectorAll(
+'input[name="Dept[]"]:checked'
+);
 
-    if (email === "") {
-        message.innerHTML = "Email is required";
-        e.preventDefault();
-        return;
-    }
+let resume=
+document.getElementById(
+"resume"
+).files.length;
 
-    if (password.length < 6) {
-        message.innerHTML = "Password must be at least 6 characters";
-        e.preventDefault();
-        return;
-    }
+if(fname===""){
+message.innerHTML=
+"Enter First Name";
+e.preventDefault();
+return;
+}
 
-    if (!gender) {
-        message.innerHTML = "Please select gender";
-        e.preventDefault();
-        return;
-    }
+if(lname===""){
+message.innerHTML=
+"Enter Last Name";
+e.preventDefault();
+return;
+}
 
-    if (dept.length === 0) {
-        message.innerHTML = "Please select at least one department";
-        e.preventDefault();
-        return;
-    }
+if(sid===""){
+message.innerHTML=
+"Enter Student ID";
+e.preventDefault();
+return;
+}
 
-    if (resume === 0) {
-        message.innerHTML = "Please upload your resume";
-        e.preventDefault();
-        return;
-    }
+let cgpaValue=
+parseFloat(cgpa);
 
-    message.style.color = "green";
-    message.innerHTML = "Form Submitted Successfully";
+if(
+isNaN(cgpaValue)
+||
+cgpaValue<0
+||
+cgpaValue>10
+){
+message.innerHTML=
+"CGPA must be between 0 and 10";
+e.preventDefault();
+return;
+}
+
+if(dob===""){
+message.innerHTML=
+"Select DOB";
+e.preventDefault();
+return;
+}
+
+let mobilePattern=
+/^[0-9]{10}$/;
+
+if(
+!mobilePattern.test(
+mobile
+)
+){
+message.innerHTML=
+"Enter valid mobile";
+e.preventDefault();
+return;
+}
+
+let emailPattern=
+/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if(
+!emailPattern.test(
+email
+)
+){
+message.innerHTML=
+"Invalid Email";
+e.preventDefault();
+return;
+}
+
+let passPattern=
+/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+if(
+!passPattern.test(
+password
+)
+){
+message.innerHTML=
+"Password must contain uppercase lowercase and number";
+e.preventDefault();
+return;
+}
+
+if(!gender){
+message.innerHTML=
+"Select Gender";
+e.preventDefault();
+return;
+}
+
+if(dept.length===0){
+message.innerHTML=
+"Select Department";
+e.preventDefault();
+return;
+}
+
+if(resume===0){
+message.innerHTML=
+"Upload Resume";
+e.preventDefault();
+return;
+}
+
+message.style.color=
+"green";
+
+message.innerHTML=
+"Validation Successful";
 
 });
