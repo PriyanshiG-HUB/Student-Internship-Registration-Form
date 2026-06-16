@@ -33,9 +33,11 @@ echo $_SESSION['email'];
 ?>
 </p>
 
-<a href="logout.php">
-Logout
-</a>
+<a href="view.php">Manage Students</a>
+
+<br><br>
+
+<a href="logout.php">Logout</a>
 
 </body>
 </html>

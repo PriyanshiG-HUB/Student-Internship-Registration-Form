@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 
@@ -9,74 +8,85 @@ if(isset($_SESSION['student_id'])){
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Student Login</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
 
 body{
-    font-family:Arial;
-    background:#f5f5f5;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+    background: linear-gradient(
+    135deg,
+    #667eea,
+    #764ba2
+    );
 }
 
-.container{
-    width:400px;
-    background:white;
-    padding:30px;
-    border-radius:10px;
-    box-shadow:0 0 10px rgba(0,0,0,.2);
+.login-card{
+    border-radius:20px;
+    overflow:hidden;
 }
 
-input{
-    width:100%;
-    padding:10px;
-    margin:10px 0;
-}
-
-button{
-    width:100%;
-    padding:10px;
-    background:#28a745;
+.card-header{
+    background:#212529;
     color:white;
-    border:none;
+    text-align:center;
+    padding:25px;
+}
+
+.card-header h2{
+    margin:0;
+    font-weight:bold;
+}
+
+.btn-login{
+    width:100%;
 }
 
 </style>
 
 </head>
+
 <body>
 
 <div class="container">
+    <div class="row justify-content-center align-items-center vh-100">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg login-card">
+                <div class="card-header">
+                    <h2>Student Login</h2>
+                    <p class="mb-0">Enter your email and password</p>
+                </div>
 
-<h2>Student Login</h2>
-
-<form action="login_process.php" method="POST">
-
-<input
-type="email"
-name="email"
-placeholder="Enter Email"
-required>
-
-<input
-type="password"
-name="password"
-placeholder="Enter Password"
-required>
-
-<button type="submit">
-Login
-</button>
-
-</form>
-
+            <div class="card-body p-4">
+            <form action="login_process.php" method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" name="email" class="form-control" placeholder="Enter Email" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Enter Password" required>
+                </div>
+                <div class="d-grid">
+                <button type="submit" class="btn btn-success btn-lg">Login</button>
+                </div>
+            </form>
+            </div>
+            <div class="card-footer text-center">
+            <small class="text-muted">Internship Registration System</small>
+            </div>
+            </div>
+        </div>
+    </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
