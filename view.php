@@ -1,13 +1,28 @@
+
 <?php
-$conn = new mysqli("localhost","root","","internshipregisteration");
-$result = $conn->query("SELECT * FROM internship_db WHERE status='active'");
+
+$conn = new mysqli(
+"localhost",
+"root",
+"",
+"internshipregisteration"
+);
+
+$result = $conn->query(
+"SELECT * FROM internship_db
+WHERE status='active'"
+);
+
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-<title>View Students</title>
+
+<title>Student Records</title>
+
 <style>
+
 *{
     margin:0;
     padding:0;
@@ -29,10 +44,28 @@ body{
     box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
-h2{
-    text-align:center;
-    color:#333;
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
     margin-bottom:25px;
+}
+
+h2{
+    color:#333;
+}
+
+.add-btn{
+    text-decoration:none;
+    background:#198754;
+    color:white;
+    padding:10px 18px;
+    border-radius:5px;
+    font-weight:bold;
+}
+
+.add-btn:hover{
+    background:#157347;
 }
 
 table{
@@ -40,28 +73,28 @@ table{
     border-collapse:collapse;
 }
 
-table th{
+th{
     background:#343a40;
     color:white;
     padding:12px;
 }
 
-table td{
+td{
     padding:12px;
     text-align:center;
     border-bottom:1px solid #ddd;
 }
 
-table tr:hover{
-    background:#f1f1f1;
+tr:hover{
+    background:#f8f9fa;
 }
 
 .action-btn{
     text-decoration:none;
     color:white;
-    padding:8px 14px;
+    padding:8px 12px;
     border-radius:5px;
-    margin:0 3px;
+    margin:2px;
     display:inline-block;
 }
 
@@ -112,6 +145,13 @@ table tr:hover{
     opacity:0.9;
 }
 
+.no-record{
+    text-align:center;
+    padding:20px;
+    font-weight:bold;
+    color:#666;
+}
+
 </style>
 
 </head>
@@ -120,49 +160,111 @@ table tr:hover{
 
 <div class="container">
 
+<div class="header">
+
 <h2>Student Records</h2>
+
+<a href="add.php" class="add-btn">
++ Add Student
+</a>
+
+</div>
 
 <table>
 
 <tr>
 <th>ID</th>
-<th>Name</th>
+<th>First Name</th>
+<th>Last Name</th>
+<th>Student ID</th>
 <th>Email</th>
+<th>Mobile</th>
 <th>CGPA</th>
 <th>Action</th>
 </tr>
 
-<?php while($row=$result->fetch_assoc()){ ?>
+<?php
+
+if($result->num_rows > 0){
+
+while($row = $result->fetch_assoc()){
+
+?>
 
 <tr>
+
 <td><?php echo $row['id']; ?></td>
 
-<td><?php echo $row['first_name']." ".$row['last_name']; ?></td>
+<td><?php echo $row['first_name']; ?></td>
+
+<td><?php echo $row['last_name']; ?></td>
+
+<td><?php echo $row['s_id']; ?></td>
 
 <td><?php echo $row['email']; ?></td>
+
+<td><?php echo $row['mobile']; ?></td>
 
 <td><?php echo $row['cgpa']; ?></td>
 
 <td>
 
-<a class="action-btn edit-btn" href="edit.php?id=<?php echo $row['id']; ?>">Edit</a>
+<a
+href="edit.php?id=<?php echo $row['id']; ?>"
+class="action-btn edit-btn">
+Edit
+</a>
 
-<a class="action-btn delete-btn" href="delete.php?id=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this record?')">Delete</a>
+<a
+href="delete.php?id=<?php echo $row['id']; ?>"
+class="action-btn delete-btn"
+onclick="return confirm('Are you sure you want to delete this student?')">
+Delete
+</a>
 
+</td>
+
+</tr>
+
+<?php
+
+}
+
+}else{
+
+?>
+
+<tr>
+<td colspan="8" class="no-record">
+No Records Found
 </td>
 </tr>
 
-<?php } ?>
+<?php
+}
+?>
 
 </table>
 
 <div class="export-section">
 
-<a class="export-btn excel" href="export_excel.php">Export Excel</a>
+<a
+href="export_excel.php"
+class="export-btn excel">
+Export Excel
+</a>
 
-<a class="export-btn word" href="export_word.php">Export Word</a>
+<a
+href="export_word.php"
+class="export-btn word">
+Export Word
+</a>
 
-<a class="export-btn pdf" href="export_pdf.php">Export PDF</a>
+<a
+href="export_pdf.php"
+class="export-btn pdf">
+Export PDF
+</a>
 
 </div>
 

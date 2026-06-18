@@ -1,16 +1,10 @@
 <?php
-
 $servername="localhost";
 $username="root";
 $password="";
 $dbname="internshipregisteration";
 
-$conn=new mysqli(
-$servername,
-$username,
-$password,
-$dbname
-);
+$conn=new mysqli($servername,$username,$password,$dbname);
 
 if($conn->connect_error){
     die("Connection Failed : "
@@ -43,22 +37,13 @@ if(isset($_POST['submit'])){
 
     $position=$_POST['PA'];
 
-    /*
-    =====================
-    DUPLICATE EMAIL CHECK
-    =====================
-    */
-
     $check=$conn->prepare(
     "SELECT email
      FROM internship_db
      WHERE email=?"
     );
 
-    $check->bind_param(
-    "s",
-    $email
-    );
+    $check->bind_param("s",$email);
 
     $check->execute();
 
@@ -70,129 +55,44 @@ if(isset($_POST['submit'])){
         echo "<script>
         alert('Email already exists');
         </script>";
-
         exit;
     }
 
-    /*
-    =====================
-    FILE UPLOAD
-    =====================
-    */
-
     if(!file_exists("uploads")){
-        mkdir(
-        "uploads",
-        0777,
-        true
-        );
+        mkdir("uploads",0777,true);
     }
 
-    $resume=
-    $_FILES['resume']['name'];
+    $resume=$_FILES['resume']['name'];
 
-    $tempname=
-    $_FILES['resume']['tmp_name'];
+    $tempname=$_FILES['resume']['tmp_name'];
 
-    $extension=
-    strtolower(
-    pathinfo(
-    $resume,
-    PATHINFO_EXTENSION
-    )
-    );
+    $extension=strtolower(pathinfo($resume,PATHINFO_EXTENSION));
 
-    $allowed=
-    ['pdf','doc','docx'];
+    $allowed=['pdf','doc','docx'];
 
-    if(
-    !in_array(
-    $extension,
-    $allowed
-    )
-    ){
-        die(
-        "Only PDF DOC DOCX allowed"
-        );
+    if(!in_array($extension,$allowed)){
+        die("Only PDF DOC DOCX allowed");
     }
 
-    $folder=
-    "uploads/".
-    time().
-    "_".
-    $resume;
+    $folder="uploads/".time()."_".$resume;
 
-    move_uploaded_file(
-    $tempname,
-    $folder
+    move_uploaded_file($tempname,$folder);
+
+    $stmt=$conn->prepare(
+        "INSERT INTO internship_db (first_name,last_name,s_id,dob,mobile,email,password,gender,department,position,cgpa,resume) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
     );
 
-    /*
-    =====================
-    INSERT DATA
-    =====================
-    */
-
-    $stmt=
-    $conn->prepare(
-
-    "INSERT INTO internship_db
-    (
-    first_name,
-    last_name,
-    s_id,
-    dob,
-    mobile,
-    email,
-    password,
-    gender,
-    department,
-    position,
-    cgpa,
-    resume
-    )
-
-    VALUES
-
-    (
-    ?,?,?,?,?,?,?,?,?,?,?,?
-    )"
-
-    );
-
-    $stmt->bind_param(
-
-    "ssssssssssss",
-
-    $fname,
-    $lname,
-    $s_id,
-    $dob,
-    $mobile,
-    $email,
-    $passwordHash,
-    $gender,
-    $department,
-    $position,
-    $cgpa,
-    $folder
-
-    );
+    $stmt->bind_param("ssssssssssss",$fname,$lname,$s_id,$dob,$mobile,$email,$passwordHash,$gender,$department,$position,$cgpa,$folder);
 
     if($stmt->execute()){
-
         echo "<script>
             alert('Registration Successful');
             window.location='login.php';
         </script>";
-
     }
     else{
-
         echo "Error : "
         .$stmt->error;
-
     }
-
 }
 ?>
