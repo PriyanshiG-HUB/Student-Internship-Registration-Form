@@ -64,7 +64,7 @@ document
 let password=
 document
 .getElementById(
-"paswd"
+"password"
 )
 .value.trim();
 

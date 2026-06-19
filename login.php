@@ -15,7 +15,7 @@ if(isset($_SESSION['student_id'])){
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Student Login</title>
+<title>Login Here</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -61,7 +61,7 @@ body{
         <div class="col-md-6 col-lg-5">
             <div class="card shadow-lg login-card">
                 <div class="card-header">
-                    <h2>Student Login</h2>
+                    <h2>Login Here</h2>
                     <p class="mb-0">Enter your email and password</p>
                 </div>
 

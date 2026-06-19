@@ -23,7 +23,7 @@ if(isset($_POST['submit'])){
 
     $passwordHash=
     password_hash(
-    $_POST['paswd'],
+    $_POST['password'],
     PASSWORD_DEFAULT
     );
 

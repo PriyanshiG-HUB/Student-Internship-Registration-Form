@@ -1,5 +1,9 @@
-
 <?php
+session_start();
+if(
+!isset($_SESSION['role']) || $_SESSION['role']!="admin"){
+    die("Access Denied");
+}
 
 $conn = new mysqli(
 "localhost",
@@ -8,19 +12,83 @@ $conn = new mysqli(
 "internshipregisteration"
 );
 
-$result = $conn->query(
-"SELECT * FROM internship_db
+if(isset($_POST['import'])){
+
+    $file = fopen(
+    $_FILES['csv_file']['tmp_name'],"r");
+
+    fgetcsv($file);
+
+    while(($row = fgetcsv($file)) !== FALSE){
+
+        $fname = $row[0];
+    $lname = $row[1];
+    $dob = $row[2];
+    $mobile = $row[3];
+    $email = $row[4];
+    $password = password_hash("student123",PASSWORD_DEFAULT);
+    $gender = $row[5];
+    $department = $row[6];
+    $position = $row[7];
+    $sid = $row[8];
+    $cgpa = $row[9];
+    $status = "active";
+    $role = "student";
+
+        $stmt = $conn->prepare(
+        "INSERT INTO internship_db(first_name,last_name,dob,mobile,email,password,gender,department,position,s_id,cgpa,status,role) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+        $stmt->bind_param("sssssssssssss",$fname,$lname,$dob,$mobile,$email,$password,$gender,$department,$position,$sid,$cgpa,$status,$role);
+
+        $stmt->execute();
+    }
+
+    fclose($file);
+
+    header("Location:view.php");
+    exit();
+}
+
+
+$records_per_page = 5;
+
+$page = isset($_GET['page'])
+? (int)$_GET['page']
+: 1;
+
+$offset = ($page - 1) * $records_per_page;
+
+$total_result = $conn->query(
+"SELECT COUNT(*) AS total
+FROM internship_db
 WHERE status='active'"
 );
 
+$total_row = $total_result->fetch_assoc();
+
+$total_students = $total_row['total'];
+
+$total_pages = ceil(
+$total_students / $records_per_page
+);
+
+$result = $conn->query(
+"SELECT *
+FROM internship_db
+WHERE status='active'
+LIMIT $offset,$records_per_page"
+);
+
+$start = $offset + 1;
+$end = min(
+$offset + $records_per_page,
+$total_students
+);
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-
-<title>Student Records</title>
-
 <style>
 
 *{
@@ -43,25 +111,40 @@ body{
     border-radius:15px;
     box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
-
 .header{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:25px;
+    margin-bottom:30px;
+    flex-wrap:wrap;
+    gap:15px;
 }
 
+.title-section{
+    flex:1;
+    text-align:center;
+}
+
+.action-section{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
 h2{
     color:#333;
+    font-size:36px;
+    margin:0;
 }
 
 .add-btn{
     text-decoration:none;
     background:#198754;
     color:white;
-    padding:10px 18px;
-    border-radius:5px;
+    padding:12px 20px;
+    border-radius:8px;
     font-weight:bold;
+    border:none;
+    cursor:pointer;
 }
 
 .add-btn:hover{
@@ -152,6 +235,37 @@ tr:hover{
     color:#666;
 }
 
+.pagination{
+    margin-top:20px;
+    text-align:center;
+}
+
+.pagination a,
+.pagination span{
+
+    display:inline-block;
+
+    padding:10px 15px;
+
+    margin:5px;
+
+    text-decoration:none;
+
+    border-radius:5px;
+
+    background:#0d6efd;
+
+    color:white;
+}
+
+.pagination a:hover{
+    background:#0b5ed7;
+}
+
+.pagination .active{
+    background:#198754;
+}
+
 </style>
 
 </head>
@@ -162,14 +276,38 @@ tr:hover{
 
 <div class="header">
 
-<h2>Student Records</h2>
+<div class="title-section">
+    <h2>Student Records</h2>
+</div>
 
-<a href="add.php" class="add-btn">
-+ Add Student
-</a>
+<div class="action-section">
+
+    <a href="add.php" class="add-btn">
+        + Add Student
+    </a>
+
+    <form method="POST"
+          enctype="multipart/form-data"
+          style="display:flex;align-items:center;gap:10px;">
+
+        <input
+        type="file"
+        name="csv_file"
+        accept=".csv"
+        required>
+
+        <button
+        type="submit"
+        name="import"
+        class="add-btn">
+            Import CSV
+        </button>
+
+    </form>
 
 </div>
 
+</div>
 <table>
 
 <tr>
@@ -245,29 +383,56 @@ No Records Found
 ?>
 
 </table>
+<p style="margin-top:15px;color:#666;text-align:center;font-size:18px;">
+Showing
+<strong>
+<?php echo $start; ?>
+</strong>
 
-<div class="export-section">
+to
 
-<a
-href="export_excel.php"
-class="export-btn excel">
-Export Excel
-</a>
+<strong>
+<?php echo $end; ?>
+</strong>
 
-<a
-href="export_word.php"
-class="export-btn word">
-Export Word
-</a>
+of
 
-<a
-href="export_pdf.php"
-class="export-btn pdf">
-Export PDF
-</a>
+<strong>
+<?php echo $total_students; ?>
+</strong>
 
+students
+
+</p>
+<div class="pagination">
+    
+<?php
+if($page > 1){
+    echo "<a href='view.php?page=".($page-1)."'>Previous</a>";
+}
+
+for($i=1;$i<=$total_pages;$i++){
+    if($i == $page){
+        echo "<span class='active'>".$i."</span>";
+        }else{
+            echo "<a href='view.php?page=".$i."'>".$i."</a>";
+}
+}
+
+if($page < $total_pages){
+
+echo "<a href='view.php?page=".($page+1)."'>Next</a>";
+}
+?>
 </div>
 
+<div class="export-section">
+<a href="export_excel.php" class="export-btn excel">Export Excel</a>
+
+<a href="export_word.php" class="export-btn word">Export Word</a>
+
+<a href="export_pdf.php" class="export-btn pdf">Export PDF</a>
+</div>
 </div>
 
 </body>

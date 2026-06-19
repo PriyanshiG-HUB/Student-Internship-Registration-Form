@@ -22,8 +22,15 @@ if($result->num_rows == 1){
         $_SESSION['student_id'] = $row['id'];
         $_SESSION['student_name'] = $row['first_name'];
         $_SESSION['email'] = $row['email'];
-        header("Location: dashboard.php");
-        exit();
+        $_SESSION['role'] = $row['role'];
+        if($row['role'] == 'admin'){
+            header("Location:view.php");
+        }
+        else{
+            header("Location:student_view.php");
+        }
+
+exit();
     }
     else{
         echo "<script>

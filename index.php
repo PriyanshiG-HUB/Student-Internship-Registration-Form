@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Internship Registration</title>
@@ -17,21 +18,22 @@
 }
 
 body{
-    background:#f5f5f5;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    background:linear-gradient(
+    135deg,
+    #667eea,
+    #764ba2
+    );
     min-height:100vh;
-    padding:20px;
+    padding:40px 0;
 }
 
 .container{
-    width:600px;
+    width:700px;
     max-width:100%;
-    background:#f8d7da;
-    padding:30px;
-    border-radius:12px;
-    box-shadow:0 4px 10px rgba(0,0,0,0.15);
+    background:white;
+    padding:35px;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
 }
 
 h2{
@@ -95,26 +97,34 @@ button{
 }
 
 button[type="submit"]{
-    background:#28a745;
+    background:#198754;
     color:white;
-}
-
-button[type="submit"]:hover{
-    background:#218838;
+    border:none;
 }
 
 button[type="reset"]{
     background:#dc3545;
     color:white;
-}
-
-button[type="reset"]:hover{
-    background:#c82333;
+    border:none;
 }
 
 #message{
     margin-top:10px;
     font-weight:bold;
+}
+.login-btn{
+    text-decoration:none;
+    padding:10px 20px;
+    background:#0d6efd;
+    color:white;
+    border-radius:5px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.login-btn:hover{
+    background:#0b5ed7;
 }
 
 </style>
@@ -165,7 +175,7 @@ button[type="reset"]:hover{
 
 <div class="form-group">
 <label>Password</label>
-<input type="password" id="paswd" name="paswd">
+<input type="password" id="password" name="password">
 </div>
 
 <div class="form-group">
@@ -245,10 +255,10 @@ ECE
 <div class="btn-group">
 <button type="submit" name="submit">Submit</button>
 <button type="reset">Reset</button>
+<a href="login.php" class="btn btn-primary">Login</a>
 </div>
 
 </form>
-
 </div>
 
 <script src="script.js"></script>
